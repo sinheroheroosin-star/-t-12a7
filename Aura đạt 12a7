@@ -1,0 +1,2481 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA FASHION & ATELIER | High-Street & Contemporary Fashion</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#faf8f5',
+              100: '#f4ede4',
+              200: '#e8dcce',
+              300: '#d7c4b1',
+              400: '#bfa38b',
+              500: '#aa866d', // Warm Atelier Rose Gold / Muted Clay
+              600: '#946f56',
+              700: '#795843',
+              800: '#644837',
+              900: '#1e1a17',
+              950: '#12100e',
+            },
+            noir: {
+              800: '#1e1e24',
+              900: '#121216',
+              950: '#09090b',
+            },
+            champagne: '#c59b7d',
+            emeraldAccent: '#059669',
+          },
+          fontFamily: {
+            display: ['"Outfit"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          boxShadow: {
+            'luxury': '0 20px 45px -15px rgba(18, 16, 14, 0.08), 0 0 1px 1px rgba(18, 16, 14, 0.05)',
+            'glow': '0 0 35px -5px rgba(170, 134, 109, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #faf8f5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #d7c4b1;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #aa866d;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Smooth Image Zoom */
+    .img-zoom {
+      transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .group:hover .img-zoom {
+      transform: scale(1.08);
+    }
+
+    /* Badge Shimmer Effect */
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
+    .badge-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .badge-shimmer::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 2.5s infinite;
+    }
+
+    /* Heart Pop Animation */
+    @keyframes heartBeat {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.35); }
+      50% { transform: scale(0.95); }
+      75% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+    .animate-heart-pop {
+      animation: heartBeat 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+  </style>
+</head>
+<body class="bg-brand-50 text-noir-900 font-sans selection:bg-brand-500 selection:text-white antialiased min-h-screen flex flex-col pb-20 md:pb-0">
+
+  <!-- 1. TOP UTILITY & PERSONALIZED LOCATION BAR -->
+  <div class="bg-noir-950 text-stone-200 text-[11px] md:text-xs py-2.5 px-4 border-b border-white/10 font-medium tracking-wide">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Pinned Delivery Address Badge -->
+      <button 
+        onclick="openAddressModal()" 
+        class="group flex items-center gap-2 bg-white/5 hover:bg-white/10 px-3 py-1 rounded-full border border-white/10 transition text-left cursor-pointer"
+        title="Nhấp để đổi địa chỉ giao hàng tại Tây Ninh"
+      >
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="text-stone-400">Giao đến:</span>
+        <span id="header-address-summary" class="font-bold text-white group-hover:text-champagne transition underline decoration-champagne/60 underline-offset-4 truncate max-w-[210px] sm:max-w-xs">
+          Thị trấn Tân Phú, Huyện Tân Phú, Tỉnh Tây Ninh
+        </span>
+        <i class="fa-solid fa-pen text-[9px] text-stone-400 group-hover:text-white transition"></i>
+      </button>
+
+      <!-- Exclusive Perks Ribbon (Desktop) -->
+      <div class="hidden lg:flex items-center gap-6 text-[11px] text-stone-300">
+        <span class="flex items-center gap-1.5">
+          <i class="fa-solid fa-crown text-amber-400"></i>
+          Đặc quyền Tây Ninh: <strong>FREESHIP đơn từ 200K</strong>
+        </span>
+        <span class="text-white/20">•</span>
+        <span class="flex items-center gap-1.5">
+          <i class="fa-solid fa-bolt text-champagne"></i>
+          Giao hỏa tốc 2 - 4h nội tỉnh
+        </span>
+        <span class="text-white/20">•</span>
+        <span class="flex items-center gap-1.5">
+          <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+          Đổi size miễn phí trong 15 ngày
+        </span>
+      </div>
+
+      <!-- Quick Contact & Help -->
+      <div class="flex items-center gap-3">
+        <a href="tel:18006886" class="hover:text-champagne transition flex items-center gap-1.5">
+          <i class="fa-solid fa-headset text-[10px]"></i>
+          <span class="hidden sm:inline">Hotline:</span> <strong>1800 6886</strong>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 2. MAIN HEADER NAVIGATION -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand-200/80 shadow-xs transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20 gap-4">
+        
+        <!-- Brand Identity -->
+        <a href="#" onclick="resetAllFilters(); return false;" class="flex items-center gap-3 group">
+          <div class="w-11 h-11 bg-noir-950 text-white rounded-2xl flex items-center justify-center font-display font-black text-xl tracking-tighter shadow-md group-hover:bg-brand-500 transition-colors duration-300">
+            A
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-display font-black text-2xl tracking-tight text-noir-950">AURA</span>
+              <span class="text-[9px] tracking-widest font-bold uppercase px-1.5 py-0.5 rounded bg-brand-500 text-white">ATELIER</span>
+            </div>
+            <p class="text-[9px] tracking-[0.25em] uppercase text-stone-400 font-semibold">High-Street & Minimalist</p>
+          </div>
+        </a>
+
+        <!-- Desktop Quick Categories Links -->
+        <nav class="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-stone-700">
+          <button onclick="filterByCategory('all')" class="hover:text-brand-500 transition relative py-2 category-nav-link" data-cat="all">Tất cả</button>
+          <button onclick="filterByCategory('Tees')" class="hover:text-brand-500 transition relative py-2 category-nav-link" data-cat="Tees">Áo thun</button>
+          <button onclick="filterByCategory('Shirts')" class="hover:text-brand-500 transition relative py-2 category-nav-link" data-cat="Shirts">Sơ mi</button>
+          <button onclick="filterByCategory('Bottoms')" class="hover:text-brand-500 transition relative py-2 category-nav-link" data-cat="Bottoms">Quần</button>
+          <button onclick="filterByCategory('Jackets')" class="hover:text-brand-500 transition relative py-2 category-nav-link" data-cat="Jackets">Áo khoác</button>
+          <button onclick="filterByCategory('Accessories')" class="hover:text-brand-500 transition relative py-2 category-nav-link" data-cat="Accessories">Phụ kiện</button>
+        </nav>
+
+        <!-- Search Bar with Live Clear -->
+        <div class="flex-1 max-w-xs sm:max-w-sm relative hidden sm:block">
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+            <input 
+              type="text" 
+              id="desktop-search-input"
+              oninput="handleSearch(this.value)"
+              placeholder="Tìm áo sơ mi, blazer, quần ống rộng..." 
+              class="w-full bg-brand-100/70 focus:bg-white text-xs pl-9 pr-8 py-2.5 rounded-full border border-transparent focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none transition"
+            >
+            <button id="search-clear-btn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700">
+              <i class="fa-solid fa-circle-xmark text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Buttons: Wishlist & Cart -->
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+          
+          <!-- Location Pill for Mobile/Tablet -->
+          <button 
+            onclick="openAddressModal()" 
+            class="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-brand-100 text-stone-800 hover:bg-brand-200 transition"
+            title="Đổi địa chỉ giao hàng"
+          >
+            <i class="fa-solid fa-location-dot text-brand-600 text-sm"></i>
+          </button>
+
+          <!-- Wishlist Button -->
+          <button 
+            onclick="toggleWishlistDrawer(true)" 
+            class="relative w-10 h-10 rounded-full border border-brand-200 hover:border-noir-900 text-noir-900 flex items-center justify-center transition active:scale-90"
+            title="Sản phẩm yêu thích"
+          >
+            <i class="fa-regular fa-heart text-sm"></i>
+            <span id="wishlist-counter" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
+          </button>
+
+          <!-- Cart Drawer Button -->
+          <button 
+            onclick="toggleCartDrawer(true)" 
+            class="relative flex items-center gap-2 bg-noir-950 hover:bg-brand-500 text-white px-4 py-2.5 rounded-full shadow-md hover:shadow-glow transition-all active:scale-95"
+            title="Giỏ hàng của bạn"
+          >
+            <i class="fa-solid fa-bag-shopping text-sm"></i>
+            <span class="text-xs font-bold hidden sm:inline">Túi đồ</span>
+            <span id="cart-counter" class="bg-white text-noir-950 text-[10px] font-black px-1.5 py-0.2 rounded-full min-w-[18px] text-center shadow-xs">0</span>
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Mobile Search Field -->
+      <div class="pb-3 sm:hidden">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+          <input 
+            type="text" 
+            id="mobile-search-input"
+            oninput="handleSearch(this.value)"
+            placeholder="Tìm kiếm mẫu thiết kế AURA..." 
+            class="w-full bg-brand-100 text-xs pl-9 pr-4 py-2.5 rounded-full border border-transparent focus:border-brand-500 outline-none"
+          >
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- 3. MAIN PAGE CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-10 flex-1 w-full">
+
+    <!-- HERO EDITORIAL BANNER -->
+    <section class="relative rounded-3xl overflow-hidden bg-noir-950 text-white min-h-[460px] md:min-h-[520px] flex items-center shadow-luxury">
+      <!-- Background Image with Editorial Vignette -->
+      <img 
+        src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1920&q=85" 
+        alt="AURA High Fashion Collection" 
+        class="absolute inset-0 w-full h-full object-cover object-center opacity-45 mix-blend-luminosity filter contrast-125"
+      >
+      <div class="absolute inset-0 bg-gradient-to-r from-noir-950 via-noir-950/80 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-noir-950/90 via-transparent to-transparent"></div>
+
+      <!-- Hero Copy -->
+      <div class="relative z-10 p-6 sm:p-12 md:p-16 max-w-2xl space-y-5">
+        
+        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-champagne border border-white/15">
+          <span class="w-2 h-2 rounded-full bg-champagne animate-ping"></span>
+          Autumn / Winter Drop 2026
+        </div>
+
+        <h1 class="font-display font-black text-3xl sm:text-5xl md:text-6xl tracking-tight leading-[1.08] uppercase">
+          Tuyên Ngôn <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-brand-200 to-champagne">
+            Gu Thời Trang
+          </span> Hiện Đại
+        </h1>
+
+        <p class="text-stone-300 text-xs sm:text-sm md:text-base leading-relaxed font-normal max-w-lg">
+          Những đường may tinh giản mang hơi thở đương đại, chất liệu tự nhiên tuyển chọn đứng form sang trọng. Giao tận tay bạn tại <span class="text-white font-bold underline decoration-champagne underline-offset-4" id="hero-location-text">Thị trấn Tân Phú, Tây Ninh</span> chỉ trong 2-4 giờ.
+        </p>
+
+        <!-- Call to Actions -->
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <button 
+            onclick="scrollToCatalog()" 
+            class="px-7 py-3.5 bg-white text-noir-950 hover:bg-brand-500 hover:text-white font-bold text-xs uppercase tracking-wider rounded-full shadow-lg transition-all duration-300 active:scale-95 flex items-center gap-2 cursor-pointer"
+          >
+            <span>Khám phá bộ sưu tập</span>
+            <i class="fa-solid fa-arrow-down text-xs"></i>
+          </button>
+          
+          <button 
+            onclick="applyVoucherPreset('AURA2026')" 
+            class="px-5 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs tracking-wider rounded-full backdrop-blur-md border border-white/20 transition flex items-center gap-2 cursor-pointer"
+          >
+            <i class="fa-solid fa-ticket text-champagne"></i>
+            <span>Voucher độc quyền -15%</span>
+          </button>
+        </div>
+
+        <!-- Micro value props -->
+        <div class="pt-3 flex flex-wrap gap-4 text-[11px] text-stone-300 border-t border-white/10">
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-box-open text-champagne"></i> Đồng kiểm & thử đồ</span>
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-arrows-rotate text-champagne"></i> Đổi size 15 ngày</span>
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-truck-ramp-box text-champagne"></i> Gói hộp quà sang trọng</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PROMO BANNER: TAY NINH LOCAL PERK -->
+    <div class="bg-gradient-to-r from-brand-900 via-noir-900 to-brand-950 rounded-2xl p-4 sm:p-5 text-white flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm border border-brand-500/30">
+      <div class="flex items-center gap-3.5 text-center md:text-left">
+        <div class="w-11 h-11 rounded-2xl bg-brand-500/20 text-champagne flex items-center justify-center text-xl shrink-0 border border-brand-500/30">
+          <i class="fa-solid fa-location-dot animate-bounce"></i>
+        </div>
+        <div>
+          <h3 class="font-display font-extrabold text-sm sm:text-base">Ưu đãi Freeship dành riêng cho Tân Phú & Tây Ninh</h3>
+          <p class="text-xs text-stone-300">Đơn hàng chỉ từ <strong class="text-white">200.000đ</strong> tự động miễn phí 100% cước giao vận hỏa tốc.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="applyVoucherPreset('FREESHIP')" class="px-4 py-2 bg-champagne hover:bg-brand-500 text-noir-950 hover:text-white font-bold text-xs rounded-full transition shadow-xs">
+          Dùng mã FREESHIP
+        </button>
+        <button onclick="openAddressModal()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-bold text-xs rounded-full border border-white/20 transition">
+          Kiểm tra địa chỉ
+        </button>
+      </div>
+    </div>
+
+    <!-- CATALOG & FILTER SECTION -->
+    <section id="catalog-section" class="space-y-6 pt-2">
+      
+      <!-- Section Title & Overview -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-brand-200 pb-5">
+        <div>
+          <span class="text-[10px] font-black uppercase tracking-widest text-brand-600">Atelier Studio Essentials</span>
+          <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-noir-950 tracking-tight mt-0.5">
+            Danh Mục Thiết Kế Mới Nhất
+          </h2>
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+          <button onclick="filterByCategory('all')" class="category-pill active px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition bg-noir-950 text-white shadow-xs" data-category="all">
+            Tất cả
+          </button>
+          <button onclick="filterByCategory('Tees')" class="category-pill px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition bg-white text-stone-700 hover:bg-brand-100 border border-brand-200" data-category="Tees">
+            Áo thun (Tees)
+          </button>
+          <button onclick="filterByCategory('Shirts')" class="category-pill px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition bg-white text-stone-700 hover:bg-brand-100 border border-brand-200" data-category="Shirts">
+            Sơ mi (Shirts)
+          </button>
+          <button onclick="filterByCategory('Bottoms')" class="category-pill px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition bg-white text-stone-700 hover:bg-brand-100 border border-brand-200" data-category="Bottoms">
+            Quần (Bottoms)
+          </button>
+          <button onclick="filterByCategory('Jackets')" class="category-pill px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition bg-white text-stone-700 hover:bg-brand-100 border border-brand-200" data-category="Jackets">
+            Áo khoác (Jackets)
+          </button>
+          <button onclick="filterByCategory('Accessories')" class="category-pill px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition bg-white text-stone-700 hover:bg-brand-100 border border-brand-200" data-category="Accessories">
+            Phụ kiện (Accessories)
+          </button>
+        </div>
+      </div>
+
+      <!-- FILTER CONTROLS BAR: SIZE + PRICE + SORT -->
+      <div class="bg-white p-4 rounded-2xl border border-brand-200 shadow-2xs space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-4 text-xs">
+          
+          <!-- Size Selector Pills -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-stone-400 font-bold uppercase text-[10px] tracking-wider">Kích cỡ:</span>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button onclick="filterBySize('all')" class="size-pill px-2.5 py-1 rounded-lg border font-bold text-xs bg-noir-950 text-white border-noir-950" data-size="all">All</button>
+              <button onclick="filterBySize('XS')" class="size-pill px-2.5 py-1 rounded-lg border font-bold text-xs bg-brand-50 text-stone-700 border-brand-200 hover:border-noir-900" data-size="XS">XS</button>
+              <button onclick="filterBySize('S')" class="size-pill px-2.5 py-1 rounded-lg border font-bold text-xs bg-brand-50 text-stone-700 border-brand-200 hover:border-noir-900" data-size="S">S</button>
+              <button onclick="filterBySize('M')" class="size-pill px-2.5 py-1 rounded-lg border font-bold text-xs bg-brand-50 text-stone-700 border-brand-200 hover:border-noir-900" data-size="M">M</button>
+              <button onclick="filterBySize('L')" class="size-pill px-2.5 py-1 rounded-lg border font-bold text-xs bg-brand-50 text-stone-700 border-brand-200 hover:border-noir-900" data-size="L">L</button>
+              <button onclick="filterBySize('XL')" class="size-pill px-2.5 py-1 rounded-lg border font-bold text-xs bg-brand-50 text-stone-700 border-brand-200 hover:border-noir-900" data-size="XL">XL</button>
+              <button onclick="filterBySize('XXL')" class="size-pill px-2.5 py-1 rounded-lg border font-bold text-xs bg-brand-50 text-stone-700 border-brand-200 hover:border-noir-900" data-size="XXL">XXL</button>
+            </div>
+          </div>
+
+          <!-- Price Range & Sorting Selectors -->
+          <div class="flex items-center gap-3 ml-auto flex-wrap">
+            <!-- Price Range -->
+            <div class="flex items-center gap-1.5">
+              <span class="text-stone-400 font-medium hidden sm:inline">Mức giá:</span>
+              <select 
+                id="price-range-select" 
+                onchange="handlePriceFilter(this.value)"
+                class="bg-brand-50 border border-brand-200 text-noir-900 font-semibold px-3 py-1.5 rounded-xl outline-none focus:border-brand-500 cursor-pointer"
+              >
+                <option value="all">Tất cả mức giá</option>
+                <option value="under300">Dưới 300.000đ</option>
+                <option value="300to600">300.000đ - 600.000đ</option>
+                <option value="above600">Trên 600.000đ</option>
+              </select>
+            </div>
+
+            <!-- Sort dropdown -->
+            <div class="flex items-center gap-1.5">
+              <span class="text-stone-400 font-medium hidden sm:inline">Sắp xếp:</span>
+              <select 
+                id="sort-select" 
+                onchange="handleSortFilter(this.value)"
+                class="bg-brand-50 border border-brand-200 text-noir-900 font-semibold px-3 py-1.5 rounded-xl outline-none focus:border-brand-500 cursor-pointer"
+              >
+                <option value="featured">Nổi bật nhất</option>
+                <option value="price-asc">Giá: Thấp đến cao</option>
+                <option value="price-desc">Giá: Cao đến thấp</option>
+                <option value="rating">Đánh giá cao nhất</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="text-[11px] text-stone-500 flex items-center justify-between border-t border-brand-100 pt-2">
+          <span>Tìm thấy <strong id="product-count" class="text-noir-950 font-black">0</strong> sản phẩm tương thích</span>
+          <button onclick="resetAllFilters()" class="text-brand-600 hover:underline font-bold">Đặt lại tất cả bộ lọc</button>
+        </div>
+      </div>
+
+      <!-- PRODUCT CARDS GRID -->
+      <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <!-- Rendered by JavaScript -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="hidden text-center py-16 bg-white rounded-3xl border border-dashed border-brand-200 p-8 space-y-3">
+        <div class="w-16 h-16 bg-brand-100 text-stone-400 rounded-full flex items-center justify-center text-2xl mx-auto">
+          <i class="fa-solid fa-shirt"></i>
+        </div>
+        <h3 class="text-base font-bold text-noir-900">Không tìm thấy sản phẩm phù hợp</h3>
+        <p class="text-xs text-stone-500 max-w-sm mx-auto">Thử đổi kích cỡ, khoảng giá hoặc nhập từ khóa tìm kiếm trang phục khác bạn nhé.</p>
+        <button onclick="resetAllFilters()" class="px-5 py-2.5 bg-noir-950 text-white rounded-full text-xs font-bold hover:bg-brand-500 transition">
+          Xem lại toàn bộ sản phẩm
+        </button>
+      </div>
+
+    </section>
+
+    <!-- EDITORIAL LOOKBOOK SECTION -->
+    <section class="bg-noir-950 text-white rounded-3xl p-6 sm:p-10 md:p-12 space-y-8 shadow-luxury">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
+        <div class="space-y-1">
+          <span class="text-[10px] font-black uppercase tracking-[0.2em] text-champagne">Atelier Editorial 2026</span>
+          <h3 class="font-display font-black text-2xl sm:text-4xl tracking-tight">Cảm Hứng Phối Đồ Street-Chic</h3>
+        </div>
+        <p class="text-stone-400 text-xs sm:text-sm max-w-md">
+          Sự hòa quyện giữa chất liệu cao cấp và đường may tối giản, giúp bạn tự tin xuất hiện ấn tượng trong mọi khoảnh khắc thường nhật.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Look 1 -->
+        <div class="group relative rounded-2xl overflow-hidden aspect-3/4 bg-noir-900 shadow-md">
+          <img 
+            src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80" 
+            alt="Lookbook 1" 
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
+          >
+          <div class="absolute inset-0 bg-gradient-to-t from-noir-950/90 via-transparent to-transparent flex flex-col justify-end p-5">
+            <span class="text-[10px] uppercase font-bold text-champagne tracking-widest">Look #01 • Monochrome</span>
+            <h4 class="font-display font-extrabold text-base">Oversize Tee & Wide Pants</h4>
+            <p class="text-[11px] text-stone-300">Set đồ đường phố tone trung tính thanh thoát.</p>
+          </div>
+        </div>
+
+        <!-- Look 2 -->
+        <div class="group relative rounded-2xl overflow-hidden aspect-3/4 bg-noir-900 shadow-md">
+          <img 
+            src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80" 
+            alt="Lookbook 2" 
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
+          >
+          <div class="absolute inset-0 bg-gradient-to-t from-noir-950/90 via-transparent to-transparent flex flex-col justify-end p-5">
+            <span class="text-[10px] uppercase font-bold text-champagne tracking-widest">Look #02 • Modern Tailoring</span>
+            <h4 class="font-display font-extrabold text-base">Relaxed Double-Breasted Blazer</h4>
+            <p class="text-[11px] text-stone-300">Form dáng suông rộng phóng khoáng, lịch thiệp.</p>
+          </div>
+        </div>
+
+        <!-- Look 3 -->
+        <div class="group relative rounded-2xl overflow-hidden aspect-3/4 bg-noir-900 shadow-md">
+          <img 
+            src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=800&q=80" 
+            alt="Lookbook 3" 
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
+          >
+          <div class="absolute inset-0 bg-gradient-to-t from-noir-950/90 via-transparent to-transparent flex flex-col justify-end p-5">
+            <span class="text-[10px] uppercase font-bold text-champagne tracking-widest">Look #03 • Minimalist Essential</span>
+            <h4 class="font-display font-extrabold text-base">Linen Oxford Shirt & Denim</h4>
+            <p class="text-[11px] text-stone-300">Sự kết hợp hoàn hảo cho những ngày dạo phố Tây Ninh.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 4. FOOTER -->
+  <footer class="bg-noir-950 text-white mt-16 pt-12 pb-8 border-t border-white/10 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-white/10">
+        
+        <!-- Brand Info -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-brand-500 text-white rounded-xl flex items-center justify-center font-display font-black text-lg">
+              A
+            </div>
+            <span class="font-display font-black text-xl tracking-tight">AURA ATELIER</span>
+          </div>
+          <p class="text-stone-400 text-[11px] leading-relaxed">
+            Thương hiệu thời trang thiết kế đương đại chuẩn form người Việt, cam kết 100% chất liệu cao cấp và dịch vụ hậu mãi chu đáo.
+          </p>
+          <div class="flex items-center gap-3 text-stone-300 text-base pt-1">
+            <a href="#" class="hover:text-champagne transition"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="hover:text-champagne transition"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" class="hover:text-champagne transition"><i class="fa-brands fa-tiktok"></i></a>
+          </div>
+        </div>
+
+        <!-- Address in Tan Phu, Tay Ninh -->
+        <div>
+          <h4 class="font-bold text-white uppercase tracking-wider text-xs mb-3">Trung Tâm & Giao Vận</h4>
+          <ul class="space-y-2 text-stone-400 text-[11px]">
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-location-dot text-champagne mt-0.5"></i>
+              <span>Hub Tây Ninh: Thị trấn Tân Phú, Huyện Tân Phú, Tỉnh Tây Ninh</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-clock text-champagne mt-0.5"></i>
+              <span>Giao hỏa tốc: 08:00 - 21:30 các ngày trong tuần</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-phone text-champagne mt-0.5"></i>
+              <span>Hotline hỗ trợ: 1800 6886 (Miễn phí cước)</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Support Policies -->
+        <div>
+          <h4 class="font-bold text-white uppercase tracking-wider text-xs mb-3">Hỗ Trợ & Chính Sách</h4>
+          <ul class="space-y-2 text-stone-400 text-[11px]">
+            <li><a href="#" class="hover:text-white transition">Chính sách đổi trả 15 ngày tận nhà</a></li>
+            <li><a href="#" class="hover:text-white transition">Bảng quy đổi kích cỡ chuẩn form Châu Á</a></li>
+            <li><a href="#" class="hover:text-white transition">Chính sách vận chuyển riêng tại Tây Ninh</a></li>
+            <li><a href="#" class="hover:text-white transition">Hướng dẫn bảo quản vải tự nhiên</a></li>
+          </ul>
+        </div>
+
+        <!-- Secure Payments -->
+        <div>
+          <h4 class="font-bold text-white uppercase tracking-wider text-xs mb-3">Thanh Toán Bảo Mật</h4>
+          <p class="text-stone-400 text-[11px] mb-3">Chấp nhận chuyển khoản VietQR, MoMo và tiền mặt khi nhận hàng (COD):</p>
+          <div class="flex flex-wrap gap-2 text-stone-800">
+            <span class="bg-white px-2.5 py-1 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-money-bill-wave text-emerald-600 mr-1"></i> COD</span>
+            <span class="bg-white px-2.5 py-1 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-qrcode text-blue-600 mr-1"></i> VietQR</span>
+            <span class="bg-white px-2.5 py-1 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-wallet text-pink-600 mr-1"></i> MoMo</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-stone-500 text-[11px] gap-2">
+        <p>© 2026 AURA FASHION & ATELIER Inc. All rights reserved.</p>
+        <p>Đặc quyền giao hàng tận nơi: Tân Phú, Tây Ninh</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MOBILE BOTTOM NAVIGATION BAR -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-brand-200 py-2 px-6 flex justify-between items-center md:hidden shadow-luxury">
+    <button onclick="resetAllFilters()" class="flex flex-col items-center text-noir-900 hover:text-brand-500 transition">
+      <i class="fa-solid fa-house text-base"></i>
+      <span class="text-[9px] font-bold mt-1">Trang chủ</span>
+    </button>
+    <button onclick="scrollToCatalog()" class="flex flex-col items-center text-stone-500 hover:text-brand-500 transition">
+      <i class="fa-solid fa-shirt text-base"></i>
+      <span class="text-[9px] font-bold mt-1">Sản phẩm</span>
+    </button>
+    <button onclick="openAddressModal()" class="flex flex-col items-center text-stone-500 hover:text-brand-500 transition">
+      <i class="fa-solid fa-location-dot text-base text-brand-600"></i>
+      <span class="text-[9px] font-bold mt-1">Địa chỉ</span>
+    </button>
+    <button onclick="toggleWishlistDrawer(true)" class="flex flex-col items-center text-stone-500 hover:text-brand-500 transition relative">
+      <i class="fa-regular fa-heart text-base"></i>
+      <span id="mobile-wishlist-counter" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center scale-0">0</span>
+      <span class="text-[9px] font-bold mt-1">Yêu thích</span>
+    </button>
+    <button onclick="toggleCartDrawer(true)" class="flex flex-col items-center text-stone-500 hover:text-brand-500 transition relative">
+      <i class="fa-solid fa-bag-shopping text-base"></i>
+      <span id="mobile-cart-counter" class="absolute -top-1 -right-1 bg-noir-950 text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center scale-0">0</span>
+      <span class="text-[9px] font-bold mt-1">Giỏ hàng</span>
+    </button>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODALS & INTERACTIVE OVERLAYS                             -->
+  <!-- ========================================================= -->
+
+  <!-- 1. PERSONALIZED ADDRESS MANAGEMENT MODAL -->
+  <div id="address-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-noir-950/70 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 p-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-all duration-300">
+      
+      <!-- Modal Header -->
+      <div class="bg-noir-950 text-white p-5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-champagne text-lg">
+            <i class="fa-solid fa-map-location-dot"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold font-display">Địa Chỉ Giao Hàng Quần Áo</h3>
+            <p class="text-[11px] text-stone-300">Cá nhân hóa đơn giao tại Huyện Tân Phú, Tây Ninh</p>
+          </div>
+        </div>
+        <button onclick="closeAddressModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Address Form -->
+      <form id="address-form" onsubmit="saveAddressSettings(event)" class="p-6 space-y-4">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-noir-900 mb-1">Họ và tên người nhận</label>
+            <input 
+              type="text" 
+              id="input-addr-name" 
+              required 
+              placeholder="Ví dụ: Nguyễn Minh Triết"
+              class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-brand-200 focus:border-noir-900 outline-none transition"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-noir-900 mb-1">Số điện thoại liên hệ</label>
+            <input 
+              type="tel" 
+              id="input-addr-phone" 
+              required 
+              pattern="[0-9]{9,11}"
+              placeholder="0918 234 567"
+              class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-brand-200 focus:border-noir-900 outline-none transition"
+            >
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-noir-900 mb-1">Tỉnh / Thành phố</label>
+            <input 
+              type="text" 
+              id="input-addr-city" 
+              value="Tỉnh Tây Ninh" 
+              readonly
+              class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-brand-100 border border-brand-200 text-stone-600 outline-none cursor-not-allowed font-medium"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-noir-900 mb-1">Huyện / Thành phố</label>
+            <select 
+              id="input-addr-district" 
+              class="w-full text-xs px-3 py-2.5 rounded-xl border border-brand-200 focus:border-noir-900 outline-none font-medium"
+            >
+              <option value="Huyện Tân Phú" selected>Huyện Tân Phú</option>
+              <option value="Thành phố Tây Ninh">TP. Tây Ninh</option>
+              <option value="Thị xã Hòa Thành">Thị xã Hòa Thành</option>
+              <option value="Thị xã Trảng Bàng">Thị xã Trảng Bàng</option>
+              <option value="Huyện Gò Dầu">Huyện Gò Dầu</option>
+              <option value="Huyện Châu Thành">Huyện Châu Thành</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-noir-900 mb-1">Xã / Thị trấn & Địa chỉ chi tiết</label>
+          <input 
+            type="text" 
+            id="input-addr-street" 
+            required 
+            placeholder="Số nhà, đường, khu phố/ấp (Ví dụ: Số 45 Đường Hùng Vương, TT. Tân Phú)"
+            class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-brand-200 focus:border-noir-900 outline-none transition"
+          >
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-noir-900 mb-1">Ghi chú giao hàng (Tùy chọn)</label>
+          <input 
+            type="text" 
+            id="input-addr-note" 
+            placeholder="Ví dụ: Gọi trước khi giao 15 phút, để gói hàng ở cổng..."
+            class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-brand-200 focus:border-noir-900 outline-none transition"
+          >
+        </div>
+
+        <!-- Quick location chips for Tan Phu -->
+        <div class="pt-1">
+          <p class="text-[11px] text-stone-400 font-semibold mb-1.5">Gợi ý địa chỉ nhanh tại Tân Phú - Tây Ninh:</p>
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" onclick="setQuickAddressPreset('Khu phố 1, Thị trấn Tân Phú, Huyện Tân Phú, Tỉnh Tây Ninh')" class="text-[10px] bg-brand-100 hover:bg-brand-200 px-2.5 py-1 rounded-lg border border-brand-200 transition">
+              Khu phố 1, TT. Tân Phú
+            </button>
+            <button type="button" onclick="setQuickAddressPreset('Khu phố 3, Gần Chợ Tân Phú, Tỉnh Tây Ninh')" class="text-[10px] bg-brand-100 hover:bg-brand-200 px-2.5 py-1 rounded-lg border border-brand-200 transition">
+              Gần Chợ Tân Phú
+            </button>
+            <button type="button" onclick="setQuickAddressPreset('Ấp Tân Lập, Huyện Tân Phú, Tỉnh Tây Ninh')" class="text-[10px] bg-brand-100 hover:bg-brand-200 px-2.5 py-1 rounded-lg border border-brand-200 transition">
+              Ấp Tân Lập
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="pt-3 flex gap-3">
+          <button type="button" onclick="closeAddressModal()" class="w-1/3 py-2.5 bg-brand-100 hover:bg-brand-200 text-noir-900 font-bold text-xs rounded-xl transition">
+            Đóng
+          </button>
+          <button type="submit" class="w-2/3 py-2.5 bg-noir-950 hover:bg-brand-500 text-white font-bold text-xs rounded-xl shadow-md transition">
+            Lưu Địa Chỉ Giao Hàng
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. PRODUCT QUICK VIEW MODAL -->
+  <div id="quickview-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-noir-950/70 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 p-4">
+    <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 max-h-[92vh] flex flex-col md:flex-row">
+      
+      <!-- Preview Image -->
+      <div class="md:w-1/2 bg-brand-100 relative h-64 md:h-auto overflow-hidden">
+        <img 
+          id="qv-modal-img" 
+          src="" 
+          alt="Product Quick View" 
+          class="w-full h-full object-cover"
+        >
+        <span id="qv-modal-tag" class="absolute top-4 left-4 bg-noir-950 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-lg">
+          Best Seller
+        </span>
+        <button onclick="closeQuickViewModal()" class="md:hidden absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 backdrop-blur-md text-stone-700 flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Detail & Selector Configurator -->
+      <div class="md:w-1/2 p-6 overflow-y-auto space-y-4 flex flex-col justify-between">
+        <div class="space-y-3">
+          
+          <div class="hidden md:flex justify-between items-center">
+            <span id="qv-modal-category" class="text-[10px] font-black uppercase tracking-wider text-brand-600">Áo Thun</span>
+            <button onclick="closeQuickViewModal()" class="w-7 h-7 rounded-full hover:bg-brand-100 text-stone-500 flex items-center justify-center transition">
+              <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+          </div>
+
+          <h3 id="qv-modal-title" class="font-display font-extrabold text-xl text-noir-950 leading-snug">
+            Tên mẫu trang phục thời trang
+          </h3>
+
+          <div class="flex items-center gap-2">
+            <div class="flex text-amber-400 text-xs">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star-half-stroke"></i>
+            </div>
+            <span id="qv-modal-rating" class="text-xs font-bold text-stone-600">4.9 (240 đánh giá)</span>
+          </div>
+
+          <div class="flex items-baseline gap-2">
+            <span id="qv-modal-price" class="text-2xl font-black font-display text-noir-950">320.000đ</span>
+            <span id="qv-modal-oldprice" class="text-xs text-stone-400 line-through">450.000đ</span>
+          </div>
+
+          <p id="qv-modal-desc" class="text-xs text-stone-500 leading-relaxed">
+            Mô tả chất liệu cao cấp và kiểu dáng thiết kế đứng form sang trọng.
+          </p>
+
+          <!-- Color Swatches -->
+          <div class="space-y-1.5 pt-1">
+            <label class="text-xs font-bold text-noir-900 flex justify-between">
+              <span>Màu sắc: <strong id="qv-selected-color-name" class="font-semibold text-brand-600">Đen Than</strong></span>
+            </label>
+            <div id="qv-modal-colors" class="flex items-center gap-2">
+              <!-- Swatch buttons generated -->
+            </div>
+          </div>
+
+          <!-- Size Selector & Size Guide Link -->
+          <div class="space-y-1.5 pt-1">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-noir-900">Kích thước (Size):</span>
+              <button type="button" onclick="toggleSizeGuide()" class="text-[11px] text-brand-600 hover:underline flex items-center gap-1 font-semibold">
+                <i class="fa-solid fa-ruler-combined text-[10px]"></i> Bảng size chuẩn form Việt
+              </button>
+            </div>
+            <div id="qv-modal-sizes" class="grid grid-cols-4 sm:grid-cols-6 gap-2">
+              <!-- Size buttons generated -->
+            </div>
+          </div>
+
+          <!-- Interactive Size Guide Tooltip Box -->
+          <div id="size-guide-popover" class="hidden p-3 bg-brand-100 rounded-xl text-[10px] space-y-1 border border-brand-200">
+            <p class="font-bold text-noir-900">Quy chuẩn size chuẩn AURA (Chiều cao / Cân nặng):</p>
+            <p>• Size S: 1m55 - 1m65 | 45kg - 55kg</p>
+            <p>• Size M: 1m65 - 1m72 | 56kg - 67kg</p>
+            <p>• Size L: 1m72 - 1m78 | 68kg - 76kg</p>
+            <p>• Size XL: 1m78 - 1m85 | 77kg - 88kg</p>
+          </div>
+
+          <!-- Stock note for Tay Ninh warehouse -->
+          <div class="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200/80 flex items-center gap-2 text-[11px] text-emerald-900">
+            <i class="fa-solid fa-circle-check text-emerald-600"></i>
+            <span>Còn hàng tại kho Tây Ninh - Ship hỏa tốc đến Tân Phú trong 2-4h.</span>
+          </div>
+
+        </div>
+
+        <!-- Quantity & Add to Cart -->
+        <div class="pt-4 border-t border-brand-200 flex items-center gap-3">
+          <div class="flex items-center border border-brand-200 rounded-full p-1 bg-brand-50">
+            <button onclick="changeQuickViewQty(-1)" class="w-7 h-7 rounded-full flex items-center justify-center text-xs hover:bg-white text-stone-600 transition">
+              <i class="fa-solid fa-minus text-[9px]"></i>
+            </button>
+            <span id="qv-modal-qty" class="w-8 text-center font-bold text-xs">1</span>
+            <button onclick="changeQuickViewQty(1)" class="w-7 h-7 rounded-full flex items-center justify-center text-xs hover:bg-white text-stone-600 transition">
+              <i class="fa-solid fa-plus text-[9px]"></i>
+            </button>
+          </div>
+
+          <button 
+            onclick="addQuickViewItemToCart()" 
+            class="flex-1 py-3 bg-noir-950 hover:bg-brand-500 text-white font-bold text-xs uppercase tracking-wider rounded-full shadow-md transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span>Thêm Vào Túi Đồ</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 3. SLIDE-OVER CART DRAWER -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 bg-noir-950/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex justify-end">
+    <div id="cart-panel" class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl transform translate-x-full transition-transform duration-300 ease-out">
+      
+      <!-- Cart Header -->
+      <div class="p-4 sm:p-5 border-b border-brand-200 flex items-center justify-between bg-brand-50">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-noir-950 text-white flex items-center justify-center text-sm shadow-xs">
+            <i class="fa-solid fa-bag-shopping"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-base text-noir-950">Túi Đồ Của Bạn</h3>
+            <p id="cart-drawer-count-info" class="text-[11px] text-stone-500">0 sản phẩm</p>
+          </div>
+        </div>
+        <button onclick="toggleCartDrawer(false)" class="w-8 h-8 rounded-full bg-brand-200 hover:bg-brand-300 text-noir-900 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Freeship Progress Meter -->
+      <div class="p-3.5 bg-white border-b border-brand-200 text-xs space-y-1.5">
+        <div class="flex justify-between items-center">
+          <span id="freeship-status-text" class="font-bold text-noir-900 flex items-center gap-1.5">
+            <i class="fa-solid fa-truck-fast text-brand-500"></i>
+            Mua thêm <strong id="freeship-shortfall" class="text-brand-600">200.000đ</strong> để Freeship Tây Ninh
+          </span>
+          <span id="freeship-percent-badge" class="font-black text-stone-500">0%</span>
+        </div>
+        <div class="w-full h-2 bg-brand-100 rounded-full overflow-hidden">
+          <div id="freeship-progress-bar" class="h-full bg-gradient-to-r from-brand-500 to-emerald-500 transition-all duration-500" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Current Location Tag in Cart -->
+      <div class="px-4 py-2 bg-brand-100/60 border-b border-brand-200 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2 truncate">
+          <i class="fa-solid fa-location-dot text-brand-600 shrink-0"></i>
+          <span class="text-stone-500">Giao đến:</span>
+          <span id="cart-location-preview" class="font-bold text-noir-900 truncate">Thị trấn Tân Phú, Tây Ninh</span>
+        </div>
+        <button onclick="openAddressModal()" class="text-brand-600 font-bold hover:underline shrink-0 text-[11px]">Đổi</button>
+      </div>
+
+      <!-- Items List -->
+      <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 space-y-3">
+        <!-- Rendered items -->
+      </div>
+
+      <!-- Empty Cart Message -->
+      <div id="cart-empty-state" class="hidden flex-1 flex flex-col items-center justify-center p-6 text-center space-y-3">
+        <div class="w-20 h-20 rounded-full bg-brand-100 flex items-center justify-center text-stone-300 text-3xl">
+          <i class="fa-solid fa-bag-shopping"></i>
+        </div>
+        <h4 class="font-bold text-noir-900 text-base">Túi đồ của bạn còn trống!</h4>
+        <p class="text-xs text-stone-400 max-w-xs">Hãy khám phá các thiết kế sơ mi, áo thun oversize hoặc quần ống rộng mới nhất nhé.</p>
+        <button onclick="toggleCartDrawer(false); scrollToCatalog();" class="px-5 py-2.5 bg-noir-950 text-white rounded-full text-xs font-bold hover:bg-brand-500 transition">
+          Khám phá bộ sưu tập
+        </button>
+      </div>
+
+      <!-- Cart Bottom: Voucher & Checkout -->
+      <div id="cart-footer-panel" class="border-t border-brand-200 p-4 sm:p-5 bg-white space-y-3 shadow-lg">
+        
+        <!-- Voucher Entry -->
+        <div class="space-y-1">
+          <div class="flex gap-2">
+            <div class="relative flex-1">
+              <i class="fa-solid fa-ticket absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+              <input 
+                type="text" 
+                id="cart-voucher-code"
+                placeholder="Mã: AURA2026, FREESHIP"
+                class="w-full text-xs font-semibold uppercase pl-8 pr-3 py-2 rounded-xl border border-brand-200 focus:border-noir-900 outline-none"
+              >
+            </div>
+            <button onclick="applyCartVoucher()" class="px-3.5 py-2 bg-noir-950 hover:bg-brand-500 text-white rounded-xl text-xs font-bold transition">
+              Áp dụng
+            </button>
+          </div>
+          <p id="voucher-feedback-msg" class="text-[10px] hidden font-bold"></p>
+        </div>
+
+        <!-- Calculations -->
+        <div class="space-y-1.5 text-xs text-stone-600 border-t border-brand-100 pt-2.5">
+          <div class="flex justify-between">
+            <span>Tạm tính</span>
+            <span id="calc-subtotal" class="font-bold text-noir-900">0đ</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Phí vận chuyển (Tân Phú, Tây Ninh)</span>
+            <span id="calc-shipping" class="font-bold text-noir-900">20.000đ</span>
+          </div>
+          <div id="calc-discount-row" class="hidden flex justify-between text-emerald-600 font-bold">
+            <span id="calc-discount-label">Ưu đãi</span>
+            <span id="calc-discount">-0đ</span>
+          </div>
+          <div class="flex justify-between items-baseline text-sm pt-2 border-t border-brand-200 font-extrabold text-noir-900">
+            <span>Tổng thanh toán</span>
+            <span id="calc-grand-total" class="text-xl font-display text-brand-600">0đ</span>
+          </div>
+        </div>
+
+        <!-- Checkout Action Button -->
+        <button 
+          onclick="openCheckoutModal()" 
+          class="w-full py-3.5 bg-noir-950 hover:bg-brand-500 text-white font-bold text-xs uppercase tracking-wider rounded-full shadow-lg transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <span>Tiến Hành Đặt Hàng</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. WISHLIST SIDE DRAWER -->
+  <div id="wishlist-drawer" class="fixed inset-0 z-50 bg-noir-950/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex justify-end">
+    <div id="wishlist-panel" class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl transform translate-x-full transition-transform duration-300 ease-out">
+      
+      <div class="p-4 sm:p-5 border-b border-brand-200 flex items-center justify-between bg-brand-50">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-sm shadow-xs">
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-base text-noir-900">Mục Yêu Thích</h3>
+            <p id="wishlist-subtitle" class="text-[11px] text-stone-500">0 sản phẩm đã lưu</p>
+          </div>
+        </div>
+        <button onclick="toggleWishlistDrawer(false)" class="w-8 h-8 rounded-full bg-brand-200 hover:bg-brand-300 text-noir-900 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div id="wishlist-items-container" class="flex-1 overflow-y-auto p-4 space-y-3">
+        <!-- Wishlist items rendered -->
+      </div>
+
+      <div id="wishlist-empty-state" class="hidden flex-1 flex flex-col items-center justify-center p-6 text-center space-y-3">
+        <div class="w-16 h-16 rounded-full bg-brand-100 flex items-center justify-center text-stone-300 text-2xl">
+          <i class="fa-regular fa-heart"></i>
+        </div>
+        <h4 class="font-bold text-noir-900 text-base">Chưa có sản phẩm yêu thích</h4>
+        <p class="text-xs text-stone-400 max-w-xs">Nhấp biểu tượng trái tim trên các sản phẩm bạn thích để lưu lại xem sau.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5. CHECKOUT MODAL (WITH VIETQR / MOMO / COD SIMULATION) -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-noir-950/70 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 p-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 max-h-[92vh] flex flex-col">
+      
+      <!-- Checkout Header -->
+      <div class="p-4 sm:p-5 bg-noir-950 text-white flex items-center justify-between">
+        <div>
+          <h3 class="font-display font-extrabold text-base">Xác Nhận Đặt Hàng Thời Trang</h3>
+          <p class="text-[11px] text-stone-300">AURA Atelier - Đóng hộp quà cao cấp giao tận nơi</p>
+        </div>
+        <button onclick="closeCheckoutModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-4 text-xs">
+        
+        <!-- Recipient & Delivery Info -->
+        <div class="p-4 bg-brand-50 border border-brand-200 rounded-2xl space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-noir-900 flex items-center gap-1.5">
+              <i class="fa-solid fa-location-dot text-brand-600"></i> Địa chỉ nhận hàng tại Tây Ninh
+            </span>
+            <button onclick="openAddressModal()" class="text-brand-600 font-bold hover:underline">Sửa</button>
+          </div>
+          <p id="checkout-name-phone" class="font-bold text-noir-900 text-sm">Nguyễn Minh Triết • 0918 234 567</p>
+          <p id="checkout-full-address" class="text-stone-600">Số 45 Hùng Vương, Thị trấn Tân Phú, Huyện Tân Phú, Tỉnh Tây Ninh</p>
+          <p id="checkout-delivery-note" class="text-stone-400 italic">Ghi chú: Gọi trước khi giao 15 phút</p>
+        </div>
+
+        <!-- Order Summary Items -->
+        <div class="space-y-1.5">
+          <span class="font-bold text-noir-900">Sản phẩm đặt mua (<span id="checkout-items-count">0</span>):</span>
+          <div id="checkout-items-list" class="max-h-36 overflow-y-auto space-y-1.5 pr-1 divide-y divide-brand-100">
+            <!-- Checkout items summary -->
+          </div>
+        </div>
+
+        <!-- Payment Method Selection -->
+        <div class="space-y-2">
+          <span class="font-bold text-noir-900">Phương thức thanh toán</span>
+          <div class="grid grid-cols-3 gap-2">
+            
+            <label class="cursor-pointer">
+              <input type="radio" name="payment_mode" value="COD" checked class="peer sr-only" onchange="togglePaymentPreview('COD')">
+              <div class="p-2.5 text-center rounded-2xl border-2 border-brand-200 peer-checked:border-noir-950 peer-checked:bg-brand-100/60 transition">
+                <i class="fa-solid fa-money-bill-wave text-emerald-600 text-lg mb-0.5"></i>
+                <p class="font-bold text-noir-900">COD Tiền mặt</p>
+                <p class="text-[9px] text-stone-400">Khi nhận đồ</p>
+              </div>
+            </label>
+
+            <label class="cursor-pointer">
+              <input type="radio" name="payment_mode" value="VIETQR" class="peer sr-only" onchange="togglePaymentPreview('VIETQR')">
+              <div class="p-2.5 text-center rounded-2xl border-2 border-brand-200 peer-checked:border-noir-950 peer-checked:bg-brand-100/60 transition">
+                <i class="fa-solid fa-qrcode text-blue-600 text-lg mb-0.5"></i>
+                <p class="font-bold text-noir-900">VietQR</p>
+                <p class="text-[9px] text-stone-400">Quét mã ngân hàng</p>
+              </div>
+            </label>
+
+            <label class="cursor-pointer">
+              <input type="radio" name="payment_mode" value="MOMO" class="peer sr-only" onchange="togglePaymentPreview('MOMO')">
+              <div class="p-2.5 text-center rounded-2xl border-2 border-brand-200 peer-checked:border-noir-950 peer-checked:bg-brand-100/60 transition">
+                <i class="fa-solid fa-wallet text-pink-600 text-lg mb-0.5"></i>
+                <p class="font-bold text-noir-900">Ví MoMo</p>
+                <p class="text-[9px] text-stone-400">Ứng dụng MoMo</p>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- Dynamic QR Box for VietQR / MoMo -->
+        <div id="checkout-qr-wrapper" class="hidden p-4 bg-brand-50 border border-brand-200 rounded-2xl text-center space-y-2">
+          <p id="checkout-qr-title" class="font-bold text-noir-900 text-xs">Quét Mã VietQR Chuyển Khoản</p>
+          <div class="w-40 h-40 mx-auto bg-white p-2 rounded-xl shadow-xs border border-brand-200 flex items-center justify-center">
+            <img 
+              id="checkout-qr-img" 
+              src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=AURA_ATELIER_TAYNINH_VIETQR" 
+              alt="QR Code" 
+              class="w-full h-full object-contain"
+            >
+          </div>
+          <div class="text-[10px] text-stone-600 space-y-0.5">
+            <p>Ngân hàng: <strong>MB BANK</strong> - STK: <strong>0388.999.888</strong></p>
+            <p>Chủ TK: <strong>AURA FASHION ATELIER TAY NINH</strong></p>
+            <p>Nội dung CK: <strong id="checkout-qr-memo" class="text-brand-600 font-mono">AURA-TN</strong></p>
+          </div>
+        </div>
+
+        <!-- Total Calculation in Checkout -->
+        <div class="p-3 bg-brand-50 rounded-2xl space-y-1 text-stone-600">
+          <div class="flex justify-between">
+            <span>Tiền hàng:</span>
+            <span id="co-subtotal-text" class="font-semibold text-noir-900">0đ</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Phí vận chuyển:</span>
+            <span id="co-ship-text" class="font-semibold text-noir-900">20.000đ</span>
+          </div>
+          <div id="co-discount-row" class="hidden flex justify-between text-emerald-600 font-bold">
+            <span>Voucher giảm giá:</span>
+            <span id="co-discount-text">-0đ</span>
+          </div>
+          <div class="flex justify-between text-base font-extrabold text-noir-900 border-t border-brand-200 pt-2 mt-1">
+            <span>Tổng số tiền:</span>
+            <span id="co-total-text" class="text-brand-600 font-display text-lg">0đ</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Button -->
+      <div class="p-4 border-t border-brand-200 bg-white">
+        <button 
+          onclick="submitFinalOrder()" 
+          class="w-full py-3.5 bg-noir-950 hover:bg-brand-500 text-white font-bold text-xs uppercase tracking-wider rounded-full shadow-lg transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <i class="fa-solid fa-check"></i>
+          <span>Xác Nhận Đặt Hàng</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 6. ORDER CELEBRATION MODAL WITH LIVE STATUS TRACKER -->
+  <div id="celebration-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-noir-950/75 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden text-center p-6 sm:p-8 space-y-5 transform scale-90 transition-all duration-300">
+      
+      <!-- Big Check Icon -->
+      <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto shadow-inner animate-bounce">
+        <i class="fa-solid fa-bag-shopping"></i>
+      </div>
+
+      <div class="space-y-1">
+        <h3 class="font-display font-black text-2xl text-noir-950">Đặt Hàng Thành Công!</h3>
+        <p class="text-xs text-stone-500">Mã vận đơn: <strong id="success-order-code" class="text-brand-600 font-mono">#AURA-TN-9812</strong></p>
+      </div>
+
+      <!-- Order Progress Stepper -->
+      <div class="p-4 bg-brand-50 border border-brand-200 rounded-2xl text-left space-y-4">
+        
+        <div class="text-[11px] font-bold text-noir-900 flex items-center justify-between border-b border-brand-200 pb-2">
+          <span>Tiến trình đơn hàng</span>
+          <span class="text-emerald-600 font-semibold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+            Đang xử lý
+          </span>
+        </div>
+
+        <!-- 4 Step Tracker -->
+        <div class="grid grid-cols-4 gap-1 text-center relative">
+          <div class="space-y-1">
+            <div class="w-7 h-7 mx-auto rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <p class="text-[9px] font-bold text-noir-900 leading-tight">Đã nhận</p>
+          </div>
+          <div class="space-y-1">
+            <div class="w-7 h-7 mx-auto rounded-full bg-brand-500 text-white flex items-center justify-center text-[10px] font-bold animate-pulse">
+              <i class="fa-solid fa-box"></i>
+            </div>
+            <p class="text-[9px] font-bold text-brand-600 leading-tight">Đóng gói</p>
+          </div>
+          <div class="space-y-1 opacity-50">
+            <div class="w-7 h-7 mx-auto rounded-full bg-stone-300 text-white flex items-center justify-center text-[10px] font-bold">
+              <i class="fa-solid fa-truck-fast"></i>
+            </div>
+            <p class="text-[9px] font-medium text-stone-600 leading-tight">Đang giao</p>
+          </div>
+          <div class="space-y-1 opacity-50">
+            <div class="w-7 h-7 mx-auto rounded-full bg-stone-300 text-white flex items-center justify-center text-[10px] font-bold">
+              <i class="fa-solid fa-house"></i>
+            </div>
+            <p class="text-[9px] font-medium text-stone-600 leading-tight">Đã giao</p>
+          </div>
+        </div>
+
+        <div class="border-t border-brand-200 pt-2 text-[11px] text-stone-600 space-y-1">
+          <p><i class="fa-solid fa-location-dot text-brand-500 mr-1.5"></i> Điểm giao: <strong id="success-order-dest" class="text-noir-900">Thị trấn Tân Phú, Huyện Tân Phú, Tây Ninh</strong></p>
+          <p><i class="fa-solid fa-clock text-amber-500 mr-1.5"></i> Dự kiến giao: <strong>Hôm nay (Trong vòng 2 - 4 giờ hỏa tốc)</strong></p>
+        </div>
+
+      </div>
+
+      <button onclick="closeCelebrationModal()" class="w-full py-3 bg-noir-950 hover:bg-brand-500 text-white font-bold text-xs uppercase tracking-wider rounded-full transition shadow-md cursor-pointer">
+        Tiếp tục mua sắm
+      </button>
+
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION STACK -->
+  <div id="toast-wrapper" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- SOUND EFFECTS VIA WEB AUDIO API -->
+  <script>
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    function playAudioTone(type = 'click') {
+      try {
+        if (audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+
+        if (type === 'click') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600, audioContext.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.15, audioContext.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
+          osc.start();
+          osc.stop(audioContext.currentTime + 0.08);
+        } else if (type === 'heart') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(440, audioContext.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(660, audioContext.currentTime + 0.12);
+          gain.gain.setValueAtTime(0.2, audioContext.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.12);
+          osc.start();
+          osc.stop(audioContext.currentTime + 0.12);
+        } else if (type === 'success') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, audioContext.currentTime);
+          osc.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1);
+          osc.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.25, audioContext.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+          osc.start();
+          osc.stop(audioContext.currentTime + 0.4);
+        }
+      } catch (e) {
+        // Fallback gracefully if blocked by autoplay policies
+      }
+    }
+  </script>
+
+  <!-- JAVASCRIPT APPLICATION CORE -->
+  <script>
+    // ==========================================
+    // 1. DATA REPOSITORY: PRODUCTS & VARIANTS
+    // ==========================================
+    const productsDatabase = [
+      {
+        id: 1,
+        name: "Áo Thun Heavyweight Oversize 'Noir Minimal' 260GSM",
+        category: "Tees",
+        price: 290000,
+        originalPrice: 390000,
+        rating: 4.9,
+        reviews: 320,
+        tag: "Best Seller",
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        colors: [
+          { name: "Đen Than", hex: "#18181b" },
+          { name: "Trắng Kem", hex: "#f4f4f5" },
+          { name: "Nâu Mocha", hex: "#5a4336" }
+        ],
+        image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80",
+        desc: "Dệt từ 100% sợi chải kỹ Compact Cotton 260GSM dày dặn, đứng form trễ vai phóng khoáng, bền màu và không xù lông."
+      },
+      {
+        id: 2,
+        name: "Sơ Mi Oxford Cắt May Regular Fit 'Nordic White'",
+        category: "Shirts",
+        price: 420000,
+        originalPrice: 550000,
+        rating: 4.8,
+        reviews: 184,
+        tag: "New Drop",
+        sizes: ["S", "M", "L", "XL"],
+        colors: [
+          { name: "Trắng Sữa", hex: "#fafaf9" },
+          { name: "Xanh Baby Blue", hex: "#bfdbfe" },
+          { name: "Xám Bạc", hex: "#94a3b8" }
+        ],
+        image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=700&q=80",
+        desc: "Dáng sơ mi công sở kết hợp dạo phố, cổ gập thanh lịch chống nhăn tự nhiên, thấm hút mồ hôi tối ưu."
+      },
+      {
+        id: 3,
+        name: "Quần Wide-Leg Trousers Xếp Ly Phong Cách Hàn Quốc",
+        category: "Bottoms",
+        price: 480000,
+        originalPrice: 620000,
+        rating: 4.9,
+        reviews: 410,
+        tag: "Hot Trend",
+        sizes: ["XS", "S", "M", "L", "XL"],
+        colors: [
+          { name: "Đen Tuyền", hex: "#0f172a" },
+          { name: "Xám Tiêu", hex: "#64748b" },
+          { name: "Kem Vani", hex: "#e2e8f0" }
+        ],
+        image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=700&q=80",
+        desc: "Chất vải tuyết mưa nhập khẩu mềm rủ, xếp 2 ly trước tôn dáng chân dài và phong cách tối giản thời thượng."
+      },
+      {
+        id: 4,
+        name: "Áo Khoác Bomber Da Lộn Suede 'Tan Sand' Atelier",
+        category: "Jackets",
+        price: 750000,
+        originalPrice: 990000,
+        rating: 5.0,
+        reviews: 125,
+        tag: "High-End",
+        sizes: ["M", "L", "XL", "XXL"],
+        colors: [
+          { name: "Nâu Da Bò", hex: "#7c2d12" },
+          { name: "Đen Nhám", hex: "#1f2937" }
+        ],
+        image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=700&q=80",
+        desc: "Vải da lộn nhân tạo mềm mịn mướt tay, bo thun cổ tay và gấu áo dệt kim chống dão, lót trong lụa mát rượi."
+      },
+      {
+        id: 5,
+        name: "Blazer 2 Cúc Relaxed Tailored Dáng Rộng 'Slate'",
+        category: "Jackets",
+        price: 890000,
+        originalPrice: 1190000,
+        rating: 4.9,
+        reviews: 98,
+        tag: "Exclusive",
+        sizes: ["S", "M", "L", "XL"],
+        colors: [
+          { name: "Xám Than", hex: "#334155" },
+          { name: "Đen Cổ Điển", hex: "#09090b" }
+        ],
+        image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=700&q=80",
+        desc: "Đệm vai mỏng tạo phom vuông vắn tự nhiên, đường may thủ công tỉ mỉ, phù hợp mặc trong phòng máy lạnh hoặc tiết trời se lạnh."
+      },
+      {
+        id: 6,
+        name: "Hoodie Nỉ Bông Cotton Boxy Fit 'Urban Shade'",
+        category: "Jackets",
+        price: 490000,
+        originalPrice: 650000,
+        rating: 4.8,
+        reviews: 260,
+        tag: "Streetwear",
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        colors: [
+          { name: "Xám Khói", hex: "#9ca3af" },
+          { name: "Xanh Rêu", hex: "#3f4e3c" },
+          { name: "Đen", hex: "#000000" }
+        ],
+        image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80",
+        desc: "Mũ 2 lớp đứng phom dày dặn, lót nỉ bông chải êm ái, túi trước bụng kangaroo tiện lợi."
+      },
+      {
+        id: 7,
+        name: "Áo Polo Knitwear Dệt Kim Phối Viền Retro",
+        category: "Shirts",
+        price: 380000,
+        originalPrice: 480000,
+        rating: 4.7,
+        reviews: 175,
+        tag: "Chic Look",
+        sizes: ["S", "M", "L", "XL"],
+        colors: [
+          { name: "Trắng Kem", hex: "#f3f4f6" },
+          { name: "Xanh Navy", hex: "#1e3a8a" }
+        ],
+        image: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=700&q=80",
+        desc: "Sợi len dệt kim mỏng nhẹ thoáng khí nhiệt đới, phối viền cổ retro thanh lịch và trẻ trung."
+      },
+      {
+        id: 8,
+        name: "Quần Jeans Ống Suông Japanese Raw Denim 13.5oz",
+        category: "Bottoms",
+        price: 590000,
+        originalPrice: 790000,
+        rating: 4.9,
+        reviews: 310,
+        tag: "Denim Lab",
+        sizes: ["S", "M", "L", "XL"],
+        colors: [
+          { name: "Xanh Chàm", hex: "#1d4ed8" },
+          { name: "Đen Rửa", hex: "#262626" }
+        ],
+        image: "https://images.unsplash.com/photo-1542272604-780c96856592?auto=format&fit=crop&w=700&q=80",
+        desc: "Chất liệu denim dệt biên chuẩn xác, cúc bấm kim loại đồng thau đúc nguyên khối chống oxy hóa."
+      },
+      {
+        id: 9,
+        name: "Túi Đeo Chéo Da Đen Crossbody 'Atelier Essential'",
+        category: "Accessories",
+        price: 350000,
+        originalPrice: 450000,
+        rating: 4.8,
+        reviews: 140,
+        tag: "Phụ kiện",
+        sizes: ["Free Size"],
+        colors: [
+          { name: "Đen Mờ", hex: "#18181b" },
+          { name: "Nâu Espresso", hex: "#451a03" }
+        ],
+        image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=700&q=80",
+        desc: "Chất liệu da tổng hợp phủ nano chống thấm nước nhẹ, khóa kéo mạ titan mờ êm mượt, đựng vừa điện thoại và ví tiền."
+      },
+      {
+        id: 10,
+        name: "Mũ Lưỡi Trai Washed Cotton Vintage Thêu Chữ AURA",
+        category: "Accessories",
+        price: 190000,
+        originalPrice: 260000,
+        rating: 4.9,
+        reviews: 280,
+        tag: "-27%",
+        sizes: ["Free Size"],
+        colors: [
+          { name: "Xanh Navy", hex: "#172554" },
+          { name: "Be Cát", hex: "#d6d3d1" },
+          { name: "Đen Washed", hex: "#292524" }
+        ],
+        image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=700&q=80",
+        desc: "Vải kaki 100% cotton xử lý wash sờn cổ điển, khóa cài sau đầu kim loại tùy chỉnh độ vừa vặn thoải mái."
+      },
+      {
+        id: 11,
+        name: "Đầm Lụa Slip Dress Cổ Đổ Thanh Lịch 'Champagne'",
+        category: "Tees",
+        price: 520000,
+        originalPrice: 690000,
+        rating: 4.8,
+        reviews: 95,
+        tag: "Nữ tính",
+        sizes: ["XS", "S", "M", "L"],
+        colors: [
+          { name: "Vàng Champagne", hex: "#fde68a" },
+          { name: "Đen Huyền Bí", hex: "#0a0a0a" }
+        ],
+        image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=700&q=80",
+        desc: "Vải lụa satin bóng nhẹ bay bổng tôn dáng, đường may xéo tà tạo độ rủ mềm mại cho bữa tiệc tối."
+      },
+      {
+        id: 12,
+        name: "Quần Parachute Túi Hộp Utility Dây Rút Baggy",
+        category: "Bottoms",
+        price: 430000,
+        originalPrice: 560000,
+        rating: 4.9,
+        reviews: 215,
+        tag: "Gen-Z",
+        sizes: ["S", "M", "L", "XL"],
+        colors: [
+          { name: "Xanh Rêu", hex: "#365314" },
+          { name: "Xám Bê Tông", hex: "#475569" },
+          { name: "Đen", hex: "#0f172a" }
+        ],
+        image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=700&q=80",
+        desc: "Dây rút ống chân linh hoạt biến tấu thành jogger hoặc quần suông rộng, vải dù kaki chống bám bụi."
+      }
+    ];
+
+    // ==========================================
+    // 2. STATE MANAGEMENT & STORAGE
+    // ==========================================
+    let currentCategory = 'all';
+    let currentSelectedSize = 'all';
+    let currentPriceFilter = 'all';
+    let currentSortFilter = 'featured';
+    let searchQuery = '';
+
+    // Cart: [{ id, size, color, quantity }]
+    let cart = [];
+    // Wishlist: [productId]
+    let wishlist = [];
+    // Applied Voucher: { code, percent, flat, freeShipping }
+    let activeVoucher = null;
+
+    const SHIPPING_STANDARD = 20000;
+    const FREESHIP_THRESHOLD_TAYNINH = 200000; // Freeship perk over 200k for Tay Ninh
+
+    // Default Personalized Address (Tan Phu, Tay Ninh)
+    const DEFAULT_ADDRESS = {
+      name: "Nguyễn Minh Triết",
+      phone: "0918 234 567",
+      city: "Tỉnh Tây Ninh",
+      district: "Huyện Tân Phú",
+      street: "Số 45 Đường Hùng Vương, Khu phố 1, Thị trấn Tân Phú",
+      note: "Gọi trước khi giao 15 phút, đồng kiểm khi nhận hàng"
+    };
+
+    let userAddress = { ...DEFAULT_ADDRESS };
+
+    // Quick View selection state
+    let activeQVProduct = null;
+    let selectedQVColor = null;
+    let selectedQVSize = null;
+    let selectedQVQty = 1;
+
+    // Currency Formatter
+    function formatVND(value) {
+      return new Intl.NumberFormat('vi-VN').format(value) + 'đ';
+    }
+
+    // ==========================================
+    // 3. APPLICATION INITIALIZATION
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStateFromStorage();
+      renderCatalogGrid();
+      updateAddressDisplay();
+      updateCartUI();
+      updateWishlistUI();
+    });
+
+    function loadStateFromStorage() {
+      try {
+        const savedAddr = localStorage.getItem('aura_atelier_address');
+        if (savedAddr) userAddress = JSON.parse(savedAddr);
+
+        const savedCart = localStorage.getItem('aura_atelier_cart');
+        if (savedCart) cart = JSON.parse(savedCart);
+
+        const savedWishlist = localStorage.getItem('aura_atelier_wishlist');
+        if (savedWishlist) wishlist = JSON.parse(savedWishlist);
+      } catch (err) {
+        console.error("Lỗi đọc LocalStorage:", err);
+      }
+    }
+
+    function saveCartToStorage() {
+      localStorage.setItem('aura_atelier_cart', JSON.stringify(cart));
+    }
+
+    function saveWishlistToStorage() {
+      localStorage.setItem('aura_atelier_wishlist', JSON.stringify(wishlist));
+    }
+
+    function saveAddressToStorage() {
+      localStorage.setItem('aura_atelier_address', JSON.stringify(userAddress));
+    }
+
+    // ==========================================
+    // 4. RENDERING & FILTERING LOGIC
+    // ==========================================
+    function renderCatalogGrid() {
+      const grid = document.getElementById('product-grid');
+      const emptyState = document.getElementById('empty-state');
+      const countEl = document.getElementById('product-count');
+
+      let list = productsDatabase.filter(p => {
+        // Category
+        if (currentCategory !== 'all' && p.category !== currentCategory) return false;
+        
+        // Size
+        if (currentSelectedSize !== 'all') {
+          if (!p.sizes.includes(currentSelectedSize) && !p.sizes.includes("Free Size")) return false;
+        }
+
+        // Price range
+        if (currentPriceFilter === 'under300' && p.price >= 300000) return false;
+        if (currentPriceFilter === '300to600' && (p.price < 300000 || p.price > 600000)) return false;
+        if (currentPriceFilter === 'above600' && p.price <= 600000) return false;
+
+        // Search text
+        if (searchQuery.trim() !== '') {
+          const q = searchQuery.toLowerCase().trim();
+          const matchName = p.name.toLowerCase().includes(q);
+          const matchDesc = p.desc.toLowerCase().includes(q);
+          const matchCat = p.category.toLowerCase().includes(q);
+          const matchTag = p.tag.toLowerCase().includes(q);
+          if (!matchName && !matchDesc && !matchCat && !matchTag) return false;
+        }
+
+        return true;
+      });
+
+      // Sorting
+      if (currentSortFilter === 'price-asc') {
+        list.sort((a, b) => a.price - b.price);
+      } else if (currentSortFilter === 'price-desc') {
+        list.sort((a, b) => b.price - a.price);
+      } else if (currentSortFilter === 'rating') {
+        list.sort((a, b) => b.rating - a.rating);
+      } else {
+        list.sort((a, b) => b.reviews - a.reviews);
+      }
+
+      countEl.textContent = list.length;
+
+      if (list.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = list.map(item => {
+        const isFav = wishlist.includes(item.id);
+        const discountPct = Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100);
+
+        return `
+          <div class="bg-white rounded-2xl overflow-hidden border border-brand-200 hover:border-noir-900 shadow-2xs hover:shadow-luxury transition-all duration-300 flex flex-col group">
+            
+            <!-- Image Card -->
+            <div class="relative aspect-3/4 overflow-hidden bg-brand-100 cursor-pointer" onclick="openQuickViewModal(${item.id})">
+              <img 
+                src="${item.image}" 
+                alt="${item.name}" 
+                loading="lazy" 
+                class="w-full h-full object-cover img-zoom"
+              >
+
+              <!-- Badges -->
+              <div class="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
+                <span class="badge-shimmer bg-noir-950 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded tracking-wider shadow-xs">
+                  ${item.tag}
+                </span>
+                ${discountPct > 0 ? `
+                  <span class="bg-brand-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded w-max">
+                    -${discountPct}%
+                  </span>
+                ` : ''}
+              </div>
+
+              <!-- Wishlist Heart Button -->
+              <button 
+                onclick="event.stopPropagation(); toggleWishlist(${item.id}, this)"
+                class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md text-stone-700 hover:text-rose-500 flex items-center justify-center transition shadow-xs z-10 active:scale-90"
+                title="Lưu yêu thích"
+              >
+                <i class="${isFav ? 'fa-solid fa-heart text-rose-500' : 'fa-regular fa-heart'} text-xs"></i>
+              </button>
+
+              <!-- Quick View CTA Hover (Desktop) -->
+              <div class="absolute inset-x-3 bottom-3 hidden md:flex opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                <button 
+                  onclick="event.stopPropagation(); openQuickViewModal(${item.id})"
+                  class="w-full py-2 bg-white/95 backdrop-blur-md text-noir-950 font-bold text-xs rounded-xl shadow-md hover:bg-noir-950 hover:text-white transition flex items-center justify-center gap-1.5"
+                >
+                  <i class="fa-solid fa-eye text-[11px]"></i>
+                  <span>Xem nhanh & Chọn size</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Content Details -->
+            <div class="p-3.5 flex-1 flex flex-col justify-between space-y-2.5">
+              <div>
+                <div class="flex items-center justify-between text-[10px] text-stone-400 font-medium">
+                  <span class="uppercase tracking-wider font-semibold text-brand-600">${item.category}</span>
+                  <span class="flex items-center gap-1 text-amber-500 font-bold">
+                    <i class="fa-solid fa-star text-[9px]"></i> ${item.rating}
+                  </span>
+                </div>
+
+                <h3 
+                  onclick="openQuickViewModal(${item.id})" 
+                  class="font-display font-bold text-xs sm:text-sm text-noir-900 line-clamp-2 mt-1 leading-snug cursor-pointer hover:text-brand-600 transition"
+                >
+                  ${item.name}
+                </h3>
+              </div>
+
+              <!-- Color dots preview -->
+              <div class="flex items-center gap-1.5 pt-0.5">
+                ${item.colors.map(c => `
+                  <span class="w-2.5 h-2.5 rounded-full border border-stone-300" style="background-color: ${c.hex}" title="${c.name}"></span>
+                `).join('')}
+                <span class="text-[9px] text-stone-400 ml-1 font-medium">${item.sizes.slice(0, 3).join('/')}${item.sizes.length > 3 ? '+' : ''}</span>
+              </div>
+
+              <!-- Price & Quick Add Button -->
+              <div class="flex items-end justify-between pt-1 border-t border-brand-100">
+                <div>
+                  <span class="text-sm sm:text-base font-black font-display text-noir-950">${formatVND(item.price)}</span>
+                  <span class="block text-[10px] text-stone-400 line-through">${formatVND(item.originalPrice)}</span>
+                </div>
+
+                <button 
+                  onclick="openQuickViewModal(${item.id})"
+                  class="w-8 h-8 rounded-full bg-brand-100 hover:bg-noir-950 hover:text-white text-noir-900 flex items-center justify-center transition active:scale-90 cursor-pointer"
+                  title="Chọn size & Thêm vào giỏ"
+                >
+                  <i class="fa-solid fa-plus text-xs"></i>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filter by Category
+    function filterByCategory(cat) {
+      currentCategory = cat;
+
+      // Update pill buttons
+      document.querySelectorAll('.category-pill').forEach(btn => {
+        if (btn.dataset.category === cat) {
+          btn.className = "category-pill active px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition bg-noir-950 text-white shadow-xs";
+        } else {
+          btn.className = "category-pill px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition bg-white text-stone-700 hover:bg-brand-100 border border-brand-200";
+        }
+      });
+
+      // Update Nav link
+      document.querySelectorAll('.category-nav-link').forEach(link => {
+        if (link.dataset.cat === cat) {
+          link.classList.add('text-brand-500', 'border-b-2', 'border-brand-500');
+        } else {
+          link.classList.remove('text-brand-500', 'border-b-2', 'border-brand-500');
+        }
+      });
+
+      renderCatalogGrid();
+    }
+
+    // Filter by Size
+    function filterBySize(size) {
+      currentSelectedSize = size;
+      document.querySelectorAll('.size-pill').forEach(btn => {
+        if (btn.dataset.size === size) {
+          btn.className = "size-pill px-2.5 py-1 rounded-lg border font-bold text-xs bg-noir-950 text-white border-noir-950";
+        } else {
+          btn.className = "size-pill px-2.5 py-1 rounded-lg border font-bold text-xs bg-brand-50 text-stone-700 border-brand-200 hover:border-noir-900";
+        }
+      });
+      renderCatalogGrid();
+    }
+
+    // Filter by Price
+    function handlePriceFilter(val) {
+      currentPriceFilter = val;
+      renderCatalogGrid();
+    }
+
+    // Sort Filter
+    function handleSortFilter(val) {
+      currentSortFilter = val;
+      renderCatalogGrid();
+    }
+
+    // Live search
+    function handleSearch(val) {
+      searchQuery = val;
+      const clearBtn = document.getElementById('search-clear-btn');
+      if (val.trim() !== '') {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      renderCatalogGrid();
+    }
+
+    function clearSearch() {
+      searchQuery = '';
+      document.getElementById('desktop-search-input').value = '';
+      const mob = document.getElementById('mobile-search-input');
+      if (mob) mob.value = '';
+      document.getElementById('search-clear-btn').classList.add('hidden');
+      renderCatalogGrid();
+    }
+
+    function resetAllFilters() {
+      currentCategory = 'all';
+      currentSelectedSize = 'all';
+      currentPriceFilter = 'all';
+      currentSortFilter = 'featured';
+      searchQuery = '';
+
+      document.getElementById('price-range-select').value = 'all';
+      document.getElementById('sort-select').value = 'featured';
+      clearSearch();
+
+      filterByCategory('all');
+      filterBySize('all');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function scrollToCatalog() {
+      const el = document.getElementById('catalog-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ==========================================
+    // 5. QUICK VIEW & CONFIGURATION MODAL
+    // ==========================================
+    function openQuickViewModal(productId) {
+      const product = productsDatabase.find(p => p.id === productId);
+      if (!product) return;
+
+      activeQVProduct = product;
+      selectedQVColor = product.colors[0];
+      selectedQVSize = product.sizes[0];
+      selectedQVQty = 1;
+
+      document.getElementById('qv-modal-img').src = product.image;
+      document.getElementById('qv-modal-tag').textContent = product.tag;
+      document.getElementById('qv-modal-category').textContent = product.category;
+      document.getElementById('qv-modal-title').textContent = product.name;
+      document.getElementById('qv-modal-rating').textContent = `${product.rating} (${product.reviews} đánh giá)`;
+      document.getElementById('qv-modal-price').textContent = formatVND(product.price);
+      document.getElementById('qv-modal-oldprice').textContent = formatVND(product.originalPrice);
+      document.getElementById('qv-modal-desc').textContent = product.desc;
+      document.getElementById('qv-modal-qty').textContent = '1';
+
+      // Colors
+      const colorContainer = document.getElementById('qv-modal-colors');
+      colorContainer.innerHTML = product.colors.map((c, i) => `
+        <button 
+          type="button" 
+          onclick="selectQVColor(${i})"
+          class="qv-color-dot w-7 h-7 rounded-full border-2 transition ${i === 0 ? 'border-noir-950 scale-110 ring-2 ring-brand-500/30' : 'border-stone-300'}"
+          style="background-color: ${c.hex};"
+          title="${c.name}"
+        ></button>
+      `).join('');
+      document.getElementById('qv-selected-color-name').textContent = selectedQVColor.name;
+
+      // Sizes
+      const sizeContainer = document.getElementById('qv-modal-sizes');
+      sizeContainer.innerHTML = product.sizes.map((s, i) => `
+        <button 
+          type="button" 
+          onclick="selectQVSize('${s}', this)"
+          class="qv-size-btn py-2 text-xs font-bold rounded-xl border transition ${i === 0 ? 'bg-noir-950 text-white border-noir-950' : 'bg-white text-stone-700 border-brand-200 hover:border-noir-900'}"
+        >
+          ${s}
+        </button>
+      `).join('');
+
+      // Open Modal
+      const modal = document.getElementById('quickview-modal');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.querySelector('div').classList.remove('scale-95');
+      modal.querySelector('div').classList.add('scale-100');
+      playAudioTone('click');
+    }
+
+    function closeQuickViewModal() {
+      const modal = document.getElementById('quickview-modal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.querySelector('div').classList.add('scale-95');
+      modal.querySelector('div').classList.remove('scale-100');
+      document.getElementById('size-guide-popover').classList.add('hidden');
+    }
+
+    function selectQVColor(index) {
+      if (!activeQVProduct) return;
+      selectedQVColor = activeQVProduct.colors[index];
+      document.getElementById('qv-selected-color-name').textContent = selectedQVColor.name;
+
+      document.querySelectorAll('.qv-color-dot').forEach((dot, idx) => {
+        if (idx === index) {
+          dot.classList.add('border-noir-950', 'scale-110', 'ring-2', 'ring-brand-500/30');
+          dot.classList.remove('border-stone-300');
+        } else {
+          dot.classList.remove('border-noir-950', 'scale-110', 'ring-2', 'ring-brand-500/30');
+          dot.classList.add('border-stone-300');
+        }
+      });
+      playAudioTone('click');
+    }
+
+    function selectQVSize(sizeName, btn) {
+      selectedQVSize = sizeName;
+      document.querySelectorAll('.qv-size-btn').forEach(b => {
+        b.classList.remove('bg-noir-950', 'text-white', 'border-noir-950');
+        b.classList.add('bg-white', 'text-stone-700', 'border-brand-200');
+      });
+      btn.classList.add('bg-noir-950', 'text-white', 'border-noir-950');
+      btn.classList.remove('bg-white', 'text-stone-700', 'border-brand-200');
+      playAudioTone('click');
+    }
+
+    function changeQuickViewQty(delta) {
+      selectedQVQty = Math.max(1, selectedQVQty + delta);
+      document.getElementById('qv-modal-qty').textContent = selectedQVQty;
+      playAudioTone('click');
+    }
+
+    function toggleSizeGuide() {
+      document.getElementById('size-guide-popover').classList.toggle('hidden');
+    }
+
+    function addQuickViewItemToCart() {
+      if (!activeQVProduct) return;
+
+      const existingIndex = cart.findIndex(c => 
+        c.id === activeQVProduct.id && 
+        c.size === selectedQVSize && 
+        c.color === selectedQVColor.name
+      );
+
+      if (existingIndex > -1) {
+        cart[existingIndex].quantity += selectedQVQty;
+      } else {
+        cart.push({
+          id: activeQVProduct.id,
+          size: selectedQVSize,
+          color: selectedQVColor.name,
+          quantity: selectedQVQty
+        });
+      }
+
+      saveCartToStorage();
+      updateCartUI();
+      closeQuickViewModal();
+      playAudioTone('success');
+      showToast(`Đã thêm "${activeQVProduct.name} (${selectedQVSize})" vào túi đồ!`, 'success');
+      toggleCartDrawer(true);
+    }
+
+    // ==========================================
+    // 6. CART MANAGEMENT & PROMO DISCOUNTS
+    // ==========================================
+    function changeCartItemQty(index, change) {
+      if (!cart[index]) return;
+      cart[index].quantity += change;
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+      saveCartToStorage();
+      updateCartUI();
+      playAudioTone('click');
+    }
+
+    function removeCartItem(index) {
+      cart.splice(index, 1);
+      saveCartToStorage();
+      updateCartUI();
+      playAudioTone('click');
+      showToast('Đã xóa sản phẩm khỏi túi đồ', 'info');
+    }
+
+    function updateCartUI() {
+      const totalCount = cart.reduce((acc, curr) => acc + curr.quantity, 0);
+
+      // Counters
+      document.getElementById('cart-counter').textContent = totalCount;
+      const mobCartCounter = document.getElementById('mobile-cart-counter');
+      if (mobCartCounter) {
+        mobCartCounter.textContent = totalCount;
+        if (totalCount > 0) mobCartCounter.classList.remove('scale-0');
+        else mobCartCounter.classList.add('scale-0');
+      }
+      document.getElementById('cart-drawer-count-info').textContent = `${totalCount} sản phẩm`;
+
+      // Subtotal calculation
+      let subtotal = 0;
+      cart.forEach(item => {
+        const p = productsDatabase.find(prod => prod.id === item.id);
+        if (p) subtotal += p.price * item.quantity;
+      });
+
+      // Freeship Progress Meter for Tay Ninh
+      const isTayNinhAddress = (userAddress.district || '').toLowerCase().includes('tân phú') || (userAddress.city || '').toLowerCase().includes('tây ninh');
+      const freeShippingEligible = (isTayNinhAddress && subtotal >= FREESHIP_THRESHOLD_TAYNINH) || (activeVoucher && activeVoucher.freeShipping);
+
+      const progressPct = Math.min(100, Math.round((subtotal / FREESHIP_THRESHOLD_TAYNINH) * 100));
+      const remainingForFreeship = Math.max(0, FREESHIP_THRESHOLD_TAYNINH - subtotal);
+
+      document.getElementById('freeship-progress-bar').style.width = `${progressPct}%`;
+      document.getElementById('freeship-percent-badge').textContent = `${progressPct}%`;
+
+      const statusText = document.getElementById('freeship-status-text');
+      if (freeShippingEligible && subtotal > 0) {
+        statusText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500"></i> Đơn hàng đủ điều kiện <strong>FREESHIP TÂY NINH!</strong>`;
+      } else {
+        statusText.innerHTML = `<i class="fa-solid fa-truck-fast text-brand-500"></i> Mua thêm <strong class="text-brand-600">${formatVND(remainingForFreeship)}</strong> để Freeship Tây Ninh`;
+      }
+
+      // Shipping & Discount
+      let shippingFee = subtotal === 0 ? 0 : (freeShippingEligible ? 0 : SHIPPING_STANDARD);
+      let discountAmount = 0;
+
+      if (activeVoucher) {
+        if (activeVoucher.percent) {
+          discountAmount = Math.round(subtotal * (activeVoucher.percent / 100));
+        } else if (activeVoucher.flat) {
+          discountAmount = activeVoucher.flat;
+        }
+      }
+
+      const grandTotal = Math.max(0, subtotal + shippingFee - discountAmount);
+
+      // DOM Updates
+      document.getElementById('calc-subtotal').textContent = formatVND(subtotal);
+      document.getElementById('calc-shipping').textContent = shippingFee === 0 ? 'Miễn phí' : formatVND(shippingFee);
+      document.getElementById('calc-grand-total').textContent = formatVND(grandTotal);
+
+      const discountRow = document.getElementById('calc-discount-row');
+      if (discountAmount > 0) {
+        discountRow.classList.remove('hidden');
+        document.getElementById('calc-discount-label').textContent = `Mã giảm giá (${activeVoucher.code})`;
+        document.getElementById('calc-discount').textContent = `-${formatVND(discountAmount)}`;
+      } else {
+        discountRow.classList.add('hidden');
+      }
+
+      // Drawer Items Container
+      const container = document.getElementById('cart-items-container');
+      const emptyState = document.getElementById('cart-empty-state');
+      const footerPanel = document.getElementById('cart-footer-panel');
+
+      if (cart.length === 0) {
+        container.classList.add('hidden');
+        footerPanel.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      container.classList.remove('hidden');
+      footerPanel.classList.remove('hidden');
+      emptyState.classList.add('hidden');
+
+      container.innerHTML = cart.map((item, idx) => {
+        const prod = productsDatabase.find(p => p.id === item.id);
+        if (!prod) return '';
+        const lineTotal = prod.price * item.quantity;
+
+        return `
+          <div class="flex items-center gap-3 p-3 bg-brand-50 border border-brand-200 rounded-2xl">
+            <img 
+              src="${prod.image}" 
+              alt="${prod.name}" 
+              class="w-16 h-20 object-cover rounded-xl shrink-0 border border-brand-200"
+            >
+            <div class="flex-1 min-w-0">
+              <h4 class="font-display font-bold text-xs text-noir-900 truncate">${prod.name}</h4>
+              <p class="text-[11px] text-stone-500 mt-0.5">Màu: <strong>${item.color}</strong> • Size: <strong>${item.size}</strong></p>
+              <p class="text-xs font-black text-noir-900 mt-0.5">${formatVND(prod.price)}</p>
+
+              <div class="flex items-center gap-2 mt-2">
+                <div class="flex items-center bg-white border border-brand-200 rounded-lg p-0.5">
+                  <button onclick="changeCartItemQty(${idx}, -1)" class="w-6 h-6 flex items-center justify-center text-stone-600 hover:bg-brand-100 rounded text-xs cursor-pointer">
+                    <i class="fa-solid fa-minus text-[9px]"></i>
+                  </button>
+                  <span class="w-7 text-center font-bold text-xs">${item.quantity}</span>
+                  <button onclick="changeCartItemQty(${idx}, 1)" class="w-6 h-6 flex items-center justify-center text-stone-600 hover:bg-brand-100 rounded text-xs cursor-pointer">
+                    <i class="fa-solid fa-plus text-[9px]"></i>
+                  </button>
+                </div>
+
+                <button onclick="removeCartItem(${idx})" class="text-stone-400 hover:text-rose-500 text-xs p-1 cursor-pointer" title="Xóa">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="text-right">
+              <span class="text-xs font-black font-display text-noir-900">${formatVND(lineTotal)}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleCartDrawer(isOpen) {
+      const drawer = document.getElementById('cart-drawer');
+      const panel = document.getElementById('cart-panel');
+
+      if (isOpen) {
+        drawer.classList.remove('opacity-0', 'pointer-events-none');
+        panel.classList.remove('translate-x-full');
+      } else {
+        drawer.classList.add('opacity-0', 'pointer-events-none');
+        panel.classList.add('translate-x-full');
+      }
+    }
+
+    // ==========================================
+    // 7. VOUCHER SYSTEM
+    // ==========================================
+    function applyVoucherPreset(code) {
+      applyVoucherCode(code);
+      toggleCartDrawer(true);
+    }
+
+    function applyCartVoucher() {
+      const val = document.getElementById('cart-voucher-code').value;
+      if (!val.trim()) {
+        showToast('Vui lòng nhập mã giảm giá', 'error');
+        return;
+      }
+      applyVoucherCode(val);
+    }
+
+    function applyVoucherCode(code) {
+      const upper = code.trim().toUpperCase();
+      const feedback = document.getElementById('voucher-feedback-msg');
+
+      if (upper === 'AURA2026') {
+        activeVoucher = { code: 'AURA2026', percent: 15, freeShipping: false };
+        showToast('Áp dụng mã AURA2026 thành công: Giảm 15% tổng đơn!', 'success');
+      } else if (upper === 'FREESHIP') {
+        activeVoucher = { code: 'FREESHIP', percent: 0, freeShipping: true };
+        showToast('Áp dụng mã FREESHIP thành công: Miễn phí giao hàng toàn quốc!', 'success');
+      } else {
+        showToast('Mã ưu đãi không hợp lệ hoặc đã hết lượt sử dụng', 'error');
+        return;
+      }
+
+      playAudioTone('success');
+      updateCartUI();
+
+      if (feedback) {
+        feedback.classList.remove('hidden');
+        feedback.className = "text-[10px] font-bold text-emerald-600 block";
+        feedback.textContent = `Đã áp dụng mã: ${activeVoucher.code}`;
+      }
+    }
+
+    // ==========================================
+    // 8. WISHLIST MANAGEMENT
+    // ==========================================
+    function toggleWishlist(productId, btnEl) {
+      const idx = wishlist.indexOf(productId);
+      if (idx > -1) {
+        wishlist.splice(idx, 1);
+        showToast('Đã bỏ sản phẩm khỏi mục yêu thích', 'info');
+      } else {
+        wishlist.push(productId);
+        showToast('Đã thêm vào danh sách yêu thích!', 'success');
+        if (btnEl) {
+          btnEl.classList.add('animate-heart-pop');
+          setTimeout(() => btnEl.classList.remove('animate-heart-pop'), 500);
+        }
+      }
+
+      saveWishlistToStorage();
+      updateWishlistUI();
+      renderCatalogGrid();
+      playAudioTone('heart');
+    }
+
+    function updateWishlistUI() {
+      const count = wishlist.length;
+      document.getElementById('wishlist-counter').textContent = count;
+      const mobWishCounter = document.getElementById('mobile-wishlist-counter');
+      if (mobWishCounter) {
+        mobWishCounter.textContent = count;
+        if (count > 0) mobWishCounter.classList.remove('scale-0');
+        else mobWishCounter.classList.add('scale-0');
+      }
+      document.getElementById('wishlist-subtitle').textContent = `${count} sản phẩm đã lưu`;
+
+      const container = document.getElementById('wishlist-items-container');
+      const emptyState = document.getElementById('wishlist-empty-state');
+
+      if (count === 0) {
+        container.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      container.classList.remove('hidden');
+      emptyState.classList.add('hidden');
+
+      container.innerHTML = wishlist.map(id => {
+        const prod = productsDatabase.find(p => p.id === id);
+        if (!prod) return '';
+
+        return `
+          <div class="flex items-center gap-3 p-3 bg-brand-50 border border-brand-200 rounded-2xl">
+            <img src="${prod.image}" alt="${prod.name}" class="w-14 h-18 object-cover rounded-xl shrink-0">
+            <div class="flex-1 min-w-0">
+              <h4 class="font-bold text-xs text-noir-900 truncate">${prod.name}</h4>
+              <p class="text-xs font-black font-display text-noir-900 mt-0.5">${formatVND(prod.price)}</p>
+              <button 
+                onclick="toggleWishlistDrawer(false); openQuickViewModal(${prod.id})" 
+                class="mt-2 text-[11px] font-bold text-brand-600 hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <span>Xem & Chọn Size</span>
+                <i class="fa-solid fa-arrow-right text-[9px]"></i>
+              </button>
+            </div>
+            <button onclick="toggleWishlist(${prod.id})" class="text-stone-400 hover:text-rose-500 p-2 cursor-pointer" title="Xóa">
+              <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleWishlistDrawer(isOpen) {
+      const drawer = document.getElementById('wishlist-drawer');
+      const panel = document.getElementById('wishlist-panel');
+
+      if (isOpen) {
+        drawer.classList.remove('opacity-0', 'pointer-events-none');
+        panel.classList.remove('translate-x-full');
+      } else {
+        drawer.classList.add('opacity-0', 'pointer-events-none');
+        panel.classList.add('translate-x-full');
+      }
+    }
+
+    // ==========================================
+    // 9. PERSONALIZED ADDRESS IN TAN PHU, TAY NINH
+    // ==========================================
+    function updateAddressDisplay() {
+      const fullAddr = `${userAddress.street}, ${userAddress.district}, ${userAddress.city}`;
+
+      // Header summary
+      document.getElementById('header-address-summary').textContent = fullAddr;
+      document.getElementById('cart-location-preview').textContent = `${userAddress.district}, ${userAddress.city}`;
+      const heroLoc = document.getElementById('hero-location-text');
+      if (heroLoc) heroLoc.textContent = `${userAddress.district}, Tây Ninh`;
+
+      // Fill in checkout preview
+      document.getElementById('checkout-name-phone').textContent = `${userAddress.name} • ${userAddress.phone}`;
+      document.getElementById('checkout-full-address').textContent = fullAddr;
+      document.getElementById('checkout-delivery-note').textContent = userAddress.note ? `Ghi chú: ${userAddress.note}` : 'Không có ghi chú thêm';
+      document.getElementById('success-order-dest').textContent = fullAddr;
+
+      // Fill modal inputs
+      document.getElementById('input-addr-name').value = userAddress.name || '';
+      document.getElementById('input-addr-phone').value = userAddress.phone || '';
+      document.getElementById('input-addr-district').value = userAddress.district || 'Huyện Tân Phú';
+      document.getElementById('input-addr-street').value = userAddress.street || '';
+      document.getElementById('input-addr-note').value = userAddress.note || '';
+    }
+
+    function openAddressModal() {
+      const modal = document.getElementById('address-modal');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.querySelector('div').classList.remove('scale-95');
+      modal.querySelector('div').classList.add('scale-100');
+    }
+
+    function closeAddressModal() {
+      const modal = document.getElementById('address-modal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.querySelector('div').classList.add('scale-95');
+      modal.querySelector('div').classList.remove('scale-100');
+    }
+
+    function setQuickAddressPreset(fullStreet) {
+      document.getElementById('input-addr-street').value = fullStreet;
+      document.getElementById('input-addr-district').value = 'Huyện Tân Phú';
+    }
+
+    function saveAddressSettings(e) {
+      e.preventDefault();
+      userAddress.name = document.getElementById('input-addr-name').value.trim();
+      userAddress.phone = document.getElementById('input-addr-phone').value.trim();
+      userAddress.district = document.getElementById('input-addr-district').value;
+      userAddress.street = document.getElementById('input-addr-street').value.trim();
+      userAddress.note = document.getElementById('input-addr-note').value.trim();
+      userAddress.city = "Tỉnh Tây Ninh";
+
+      saveAddressToStorage();
+      updateAddressDisplay();
+      closeAddressModal();
+      playAudioTone('success');
+      showToast('Đã cập nhật địa chỉ giao hàng tại Tây Ninh thành công!', 'success');
+      updateCartUI(); // Recheck freeship condition
+    }
+
+    // ==========================================
+    // 10. CHECKOUT WORKFLOW & ORDER CELEBRATION
+    // ==========================================
+    function openCheckoutModal() {
+      if (cart.length === 0) {
+        showToast('Túi đồ của bạn đang trống!', 'error');
+        return;
+      }
+
+      toggleCartDrawer(false);
+
+      // Render checkout summary
+      const itemsList = document.getElementById('checkout-items-list');
+      const countEl = document.getElementById('checkout-items-count');
+
+      let subtotal = 0;
+      itemsList.innerHTML = cart.map(item => {
+        const prod = productsDatabase.find(p => p.id === item.id);
+        if (!prod) return '';
+        const lineTotal = prod.price * item.quantity;
+        subtotal += lineTotal;
+
+        return `
+          <div class="flex justify-between items-center py-2 text-xs">
+            <span class="text-stone-700 truncate max-w-[270px]">${item.quantity}x ${prod.name} (${item.size}/${item.color})</span>
+            <span class="font-bold text-noir-900">${formatVND(lineTotal)}</span>
+          </div>
+        `;
+      }).join('');
+
+      countEl.textContent = cart.reduce((a, b) => a + b.quantity, 0);
+
+      // Calculations
+      const isTayNinhAddress = (userAddress.district || '').toLowerCase().includes('tân phú') || (userAddress.city || '').toLowerCase().includes('tây ninh');
+      const freeShippingEligible = (isTayNinhAddress && subtotal >= FREESHIP_THRESHOLD_TAYNINH) || (activeVoucher && activeVoucher.freeShipping);
+      const shippingFee = freeShippingEligible ? 0 : SHIPPING_STANDARD;
+
+      let discountAmount = 0;
+      if (activeVoucher) {
+        if (activeVoucher.percent) discountAmount = Math.round(subtotal * (activeVoucher.percent / 100));
+        else if (activeVoucher.flat) discountAmount = activeVoucher.flat;
+      }
+
+      const total = Math.max(0, subtotal + shippingFee - discountAmount);
+
+      document.getElementById('co-subtotal-text').textContent = formatVND(subtotal);
+      document.getElementById('co-ship-text').textContent = shippingFee === 0 ? 'Miễn phí' : formatVND(shippingFee);
+      document.getElementById('co-total-text').textContent = formatVND(total);
+
+      const discRow = document.getElementById('co-discount-row');
+      if (discountAmount > 0) {
+        discRow.classList.remove('hidden');
+        document.getElementById('co-discount-text').textContent = `-${formatVND(discountAmount)}`;
+      } else {
+        discRow.classList.add('hidden');
+      }
+
+      // Generate random order memo for QR
+      const memo = "AURA" + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('checkout-qr-memo').textContent = memo;
+
+      const modal = document.getElementById('checkout-modal');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.querySelector('div').classList.remove('scale-95');
+      modal.querySelector('div').classList.add('scale-100');
+    }
+
+    function closeCheckoutModal() {
+      const modal = document.getElementById('checkout-modal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.querySelector('div').classList.add('scale-95');
+      modal.querySelector('div').classList.remove('scale-100');
+    }
+
+    function togglePaymentPreview(mode) {
+      const qrWrapper = document.getElementById('checkout-qr-wrapper');
+      const qrTitle = document.getElementById('checkout-qr-title');
+      const qrImg = document.getElementById('checkout-qr-img');
+
+      if (mode === 'COD') {
+        qrWrapper.classList.add('hidden');
+      } else if (mode === 'VIETQR') {
+        qrWrapper.classList.remove('hidden');
+        qrTitle.textContent = "Quét VietQR Chuyển Khoản Ngân Hàng 24/7";
+        qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=VIETQR_AURA_ATELIER_TAYNINH_MBBANK";
+      } else if (mode === 'MOMO') {
+        qrWrapper.classList.remove('hidden');
+        qrTitle.textContent = "Quét Mã Ví Điện Tử MoMo Thanh Toán";
+        qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=MOMO_AURA_FASHION_TAYNINH";
+      }
+    }
+
+    function submitFinalOrder() {
+      closeCheckoutModal();
+
+      const orderCode = "#AURA-TN-" + Math.floor(10000 + Math.random() * 90000);
+      document.getElementById('success-order-code').textContent = orderCode;
+      document.getElementById('success-order-dest').textContent = `${userAddress.street}, ${userAddress.district}, ${userAddress.city}`;
+
+      // Open celebration modal
+      const modal = document.getElementById('celebration-modal');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.querySelector('div').classList.remove('scale-90');
+      modal.querySelector('div').classList.add('scale-100');
+
+      playAudioTone('success');
+      launchConfetti();
+
+      // Clear cart
+      cart = [];
+      activeVoucher = null;
+      saveCartToStorage();
+      updateCartUI();
+    }
+
+    function closeCelebrationModal() {
+      const modal = document.getElementById('celebration-modal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.querySelector('div').classList.add('scale-90');
+      modal.querySelector('div').classList.remove('scale-100');
+    }
+
+    function launchConfetti() {
+      try {
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 120,
+            spread: 80,
+            origin: { y: 0.6 }
+          });
+          setTimeout(() => {
+            confetti({
+              particleCount: 60,
+              angle: 60,
+              spread: 60,
+              origin: { x: 0.05 }
+            });
+            confetti({
+              particleCount: 60,
+              angle: 120,
+              spread: 60,
+              origin: { x: 0.95 }
+            });
+          }, 350);
+        }
+      } catch (err) {
+        console.log("Confetti trigger:", err);
+      }
+    }
+
+    // ==========================================
+    // 11. TOAST NOTIFICATION SYSTEM
+    // ==========================================
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-wrapper');
+      const toast = document.createElement('div');
+
+      let icon = 'fa-info-circle text-blue-500';
+      let borderStyle = 'border-brand-200 bg-white/95 text-noir-900';
+
+      if (type === 'success') {
+        icon = 'fa-circle-check text-emerald-500';
+        borderStyle = 'border-emerald-200 bg-emerald-50/95 text-emerald-950';
+      } else if (type === 'error') {
+        icon = 'fa-circle-exclamation text-rose-500';
+        borderStyle = 'border-rose-200 bg-rose-50/95 text-rose-950';
+      }
+
+      toast.className = `flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-luxury border ${borderStyle} backdrop-blur-md text-xs font-bold transition-all duration-300 transform translate-y-3 opacity-0 pointer-events-auto`;
+      toast.innerHTML = `
+        <i class="fa-solid ${icon} text-sm shrink-0"></i>
+        <span>${message}</span>
+      `;
+
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-3', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-[-10px]', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+  </script>
+
+</body>
+</html>
